@@ -42,6 +42,8 @@ class SowfaInterface(LoggerBase):
         controlDict_sub_path="system/controlDict",
         turbine_output_sub_path="turbineOutput/20000",
         assumed_settling_time=None,
+        forced_diameter=None,
+        forced_mean_start_time=None,
     ):
         """
         SowfaInterface object init method.
@@ -62,6 +64,12 @@ class SowfaInterface(LoggerBase):
                 operational data. Defaults to 'turbineOutput/20000'.
             assumed_settling_time (float, optional): Time to account
                 for startup transients in simulation. Defaults to None.
+            forced_diameter (float, optional): To temp avoid an issue in
+                how vanilla sowfa stores turbine data (as open fast), 
+                allow a workaround where D is passed in
+            forced_mean_start_time (float, optional): Again, to avoid
+                issue that vanilla handles this differently, allow
+                a manual override
         """
         self.logger.info(case_folder)
 
@@ -113,10 +121,13 @@ class SowfaInterface(LoggerBase):
             self.logger.info(self.pitch_angles)
 
         # Get the turbine rotor diameter and hub height
-        turbine_dict = read_foam_file(
-            os.path.join(self.case_folder, self.turbine_sub_path, self.turbine_name)
-        )
-        self.D = 2 * turbine_dict["TipRad"]
+        if forced_diameter is None:
+            turbine_dict = read_foam_file(
+                os.path.join(self.case_folder, self.turbine_sub_path, self.turbine_name)
+            )
+            self.D = 2 * turbine_dict["TipRad"]
+        else:
+            self.D = forced_diameter
 
         # Use the setup file and control file to determine the precursor wind
         # speed and the time flow averaging begins (settling time)
@@ -125,7 +136,10 @@ class SowfaInterface(LoggerBase):
             os.path.join(self.case_folder, self.controlDict_sub_path)
         )
         start_run_time = controlDict_dict["startTime"]
-        averaging_start_time = setup_dict["meanStartTime"]
+        if forced_mean_start_time is None:
+            averaging_start_time = setup_dict["meanStartTime"]
+        else:
+            averaging_start_time = forced_mean_start_time
         if assumed_settling_time is not None:
             self.logger.info(
                 "Using assumed settling time of %.1f s" % assumed_settling_time
@@ -133,10 +147,18 @@ class SowfaInterface(LoggerBase):
             self.settling_time = assumed_settling_time
         else:
             self.settling_time = averaging_start_time - start_run_time
-        self.precursor_wind_speed = setup_dict["U0Mag"]
+
+        if "U0Mag" in setup_dict: #Pre vanilla name
+            self.precursor_wind_speed = setup_dict["U0Mag"]
+        else: #Vanille version
+            self.precursor_wind_speed = setup_dict["windSpeed"]
 
         # Get the wind direction
-        self.precursor_wind_dir = setup_dict["dir"]
+        if "dir" in setup_dict: #Pre vanilla name
+            self.precursor_wind_dir = setup_dict["dir"]
+        else: #Vanille version
+            self.precursor_wind_dir = setup_dict["windDir"]
+
 
         # Get the surface roughness
         self.z0 = setup_dict["z0"]
@@ -465,6 +487,7 @@ def read_sowfa_df(folder_name, channels=[]):
         "torqueRotor",
         "azimuth",
         "pitch",
+        "rotorPower"
     ]
 
     # Limit to files
