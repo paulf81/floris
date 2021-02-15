@@ -27,3 +27,4 @@ fi.calculate_wake()
 # Get the flow data and save to vtk
 flow_data = fi.get_flow_data()
 flow_data.save_as_vtk("flow.vtk")
+flow_data.save_as_vtk_pyevtk("flow_pyevtk")
