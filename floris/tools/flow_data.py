@@ -17,6 +17,7 @@ import os
 
 import numpy as np
 from sklearn import neighbors
+from pyevtk.hl import pointsToVTK
 
 from ..utilities import Vec3
 
@@ -87,6 +88,21 @@ class FlowData:
         vtk_file.write("UAvg 3 {} float".format(n_points) + ln)
         for u, v, w in zip(self.u, self.v, self.w):
             vtk_file.write("{}".format(Vec3(u, v, w)) + ln)
+
+    def save_as_vtk_pyevtk(self, filename):
+        """
+        Save FlowData Object to vtk format using the pyevtk module
+
+        Args:
+            filename (str): Write-to path for vtk file.
+        """
+        pointsToVTK(
+            filename,
+            self.x,
+            self.y,
+            self.z,
+            data={"u": self.u, "v": self.v, "w": self.w},
+        )
 
     @staticmethod
     def crop(ff, x_bnds, y_bnds, z_bnds):
