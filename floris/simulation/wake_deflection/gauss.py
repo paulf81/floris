@@ -278,7 +278,7 @@ class Gauss(VelocityDeflection):
 
             eps = self.eps_gain * D  # Use set value
             idx = np.where(
-                (np.abs(x_locations - coord.x1) < D / 4)
+                (np.abs(x_locations - coord.x1) == 0.0)  # < D / 4)
                 & (np.abs(y_locations - coord.x2) < D / 2)
             )
 

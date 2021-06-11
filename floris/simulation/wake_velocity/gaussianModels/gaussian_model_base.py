@@ -71,7 +71,9 @@ class GaussianModel(VelocityDeficit):
 
             # compute the new TKE
             idx = np.where(
-                (np.abs(x_locations - coord.x1) <= turbine.rotor_diameter / 4)
+                (
+                    np.abs(x_locations - coord.x1) == 0.0
+                )  # <= turbine.rotor_diameter / 4)
                 & (np.abs(y_locations - coord.x2) < turbine.rotor_diameter)
             )
             TKE = (1 / 2) * (
