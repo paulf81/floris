@@ -242,6 +242,21 @@ class FlowField:
         self.v_initial = np.zeros(np.shape(self.u_initial))
         self.w_initial = np.zeros(np.shape(self.u_initial))
 
+        # Define a veer function
+        veer = 30
+        hub_height = 90.0
+        D = 126.0
+
+        # Try a dummy veer function
+        self.v_initial = (veer / D) * self.z + (-1 * veer * hub_height / D)
+
+        # Or just try to change the direction
+        self.v_initial = 10 * np.ones(np.shape(self.u_initial))
+
+        # Set v initial to include some veer
+        print(self.z)
+        print(self.v_initial)
+
         self.u = self.u_initial.copy()
         self.v = self.v_initial.copy()
         self.w = self.w_initial.copy()
