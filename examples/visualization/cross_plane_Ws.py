@@ -30,21 +30,36 @@ fi = wfct.floris_interface.FlorisInterface("../example_input.json")
 fi.reinitialize_flow_field(layout_array=([0], [0]), wind_speed=8.0)
 
 # Calculate wake
-fi.calculate_wake(yaw_angles=[yaw])
 
 
-# # Get horizontal plane at default height (hub-height)
-# hor_plane = fi.get_cross_plane(x_loc=d_downstream * D)
-
-# # Plot the u-cross plane
 # fig, axarr = plt.subplots(2,1,figsize=(10,7))
 # ax = axarr[0]
+
+# fi.calculate_wake(yaw_angles=[yaw])
+# hor_plane = fi.get_cross_plane(x_loc=d_downstream * D)
 # wfct.visualization.visualize_cut_plane(hor_plane, ax=ax)
 # wfct.visualization.reverse_cut_plane_x_axis_in_plot(ax)
+# ax.axvline(0,color='k')
+# ax.set_title('Yaw = 0')
+
+# ax = axarr[1]
+
+# fi.calculate_wake(yaw_angles=[25])
+# hor_plane = fi.get_cross_plane(x_loc=d_downstream * D)
+# wfct.visualization.visualize_cut_plane(hor_plane, ax=ax)
+# wfct.visualization.reverse_cut_plane_x_axis_in_plot(ax)
+# ax.axvline(0,color='k')
+# ax.set_title('Yaw = 25')
+
+# # Get horizontal plane at default height (hub-height)
+# 
+# # Plot the u-cross plane
+# fig, axarr = plt.subplots(2,1,figsize=(10,7))
+
 
 # # Plot the in-plane flows
 # ax = axarr[1]
 # wfct.visualization.visualize_quiver(hor_plane, ax=ax)
 # wfct.visualization.reverse_cut_plane_x_axis_in_plot(ax)
 # ax.set_aspect("equal")
-# plt.show()
+plt.show()
