@@ -247,15 +247,29 @@ class FlowField:
         hub_height = 90.0
         D = 126.0
 
+        # Determine the wd_relative as a function of height
+        wd_relative = (veer / D) * self.z + (-1 * veer * hub_height / D)
+
+        # Determine v initial at each height
+        self.v_initial = np.tan(-1 * np.deg2rad(wd_relative)) * self.u_initial
+
+        print('********')
+        print(self.z)
+        print('----')
+        print(wd_relative)
+        print('----')
+        print(self.v_initial)
+        print('*********')
+
         # Try a dummy veer function
-        self.v_initial = (veer / D) * self.z + (-1 * veer * hub_height / D)
+        # self.v_initial = (veer / D) * self.z + (-1 * veer * hub_height / D)
 
         # Or just try to change the direction
-        self.v_initial = 10 * np.ones(np.shape(self.u_initial))
+        # self.v_initial = 1 * np.ones(np.shape(self.u_initial))
 
         # Set v initial to include some veer
-        print(self.z)
-        print(self.v_initial)
+        # print(self.z)
+        # print(self.v_initial)
 
         self.u = self.u_initial.copy()
         self.v = self.v_initial.copy()
@@ -611,7 +625,7 @@ class FlowField:
 
         # Empty the stored variables of v and w at start, these will be updated
         # and stored within the loop
-        self.v = np.zeros(np.shape(self.u))
+        # self.v = np.zeros(np.shape(self.u))
         self.w = np.zeros(np.shape(self.u))
 
         rx = np.array([coord.x1prime for coord in self.turbine_map.coords])
