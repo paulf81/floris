@@ -373,6 +373,7 @@ class Gauss(VelocityDeflection):
                 ival = (bR - bL) / (mL - mR)
                 # convert the indice into degrees
                 yaw_effective = ival - max_yaw
+            print('yaw_eff',yaw_effective)
 
             return yaw_effective + turbine.yaw_angle
         else:
