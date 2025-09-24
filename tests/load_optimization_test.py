@@ -13,7 +13,6 @@ from floris.optimization.load_optimization.load_optimization import (
     compute_turbine_voc,
     find_A_to_satisfy_rev_voc_ratio,
     find_A_to_satisfy_target_VOC_per_MW,
-    optimize_power_setpoints,
 )
 
 

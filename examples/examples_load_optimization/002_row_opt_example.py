@@ -11,10 +11,6 @@ import numpy as np
 import pandas as pd
 
 from floris import FlorisModel, TimeSeries
-from floris.core.turbine.operation_models import (
-    POWER_SETPOINT_DEFAULT,
-    POWER_SETPOINT_DISABLED,
-)
 from floris.optimization.load_optimization.load_optimization import (
     compute_farm_revenue,
     compute_farm_voc,
@@ -26,7 +22,7 @@ from floris.optimization.load_optimization.load_optimization import (
 # Parameters
 D = 126.0
 d_spacing = 7.0
-power_setpoint_levels = np.linspace(POWER_SETPOINT_DEFAULT, POWER_SETPOINT_DISABLED, 10)
+power_setpoint_levels = np.arange(0.0, 5e6, 1e5) # Sweep through power setpoints from 0 to 5 MW
 n_turbines = 3
 A = 4e-6  # Selected to demonstrate variation in derating selection
 
@@ -191,10 +187,10 @@ im = ax.imshow(data, cmap="coolwarm_r", aspect="auto")
 # Add the annotations to the cells
 for i in range(len(df.index)):
     for j in range(len(df.columns)):
-        text = ax.text(j, i, f"{data[i, j]:.3f}", ha="center", va="center", color="w")
+        text = ax.text(j, i, f"{data[i, j]/1e6:.2f}", ha="center", va="center", color="w")
 
 # Set title
-ax.set_title("Optimized Power Setpoints (W)")
+ax.set_title("Optimized Power Setpoints (MW)")
 
 # Set x and y tick labels
 ax.set_xticks(np.arange(len(df.columns)))

@@ -430,14 +430,13 @@ def optimize_power_setpoints(
     fmodel: FlorisModel,
     A: float,
     ambient_lti: np.array,
+    power_setpoint_levels: np.array,
     wake_slope: float = 0.3,
     max_dist_D: float = 10.0,
     exp_ws_std: float = 1.0,
     exp_thrust: float = 1.0,
     power_setpoint_initial: np.array = None,
-    power_setpoint_levels: np.array = np.linspace(
-        POWER_SETPOINT_DEFAULT, POWER_SETPOINT_DISABLED, 5
-    ),
+
 ):
     """Optimize the derating of each turbine to maximize net revenue sequentially from upstream to
     downstream.
@@ -447,6 +446,8 @@ def optimize_power_setpoints(
         A (float): Coefficient for the VOC calculation
         ambient_lti (list or np.array): Ambient 'load' turbulence intensity for each findex,
             expressed as fractions of mean wind speed
+        power_setpoint_levels (np.array, optional): Array of power setpoint levels to consider
+            in optimization in W.
         wake_slope (float, optional): Wake slope, defined as the lateral expansion of the wake on
             each side per unit downstream distance along the axial direction. Defaults to 0.3.
         max_dist_D (flat, optional): Maximum distance downstream of a turbine beyond which wake
@@ -457,9 +458,7 @@ def optimize_power_setpoints(
         exp_thrust (float, optional): Exponent for the thrust. Defaults to 1.
         power_setpoint_initial (np.array, optional): Initial power setpoint for each turbine.
             If None, each turbine's rated power will be used. Defaults to None.
-        power_setpoint_levels (np.array, optional): Array of power setpoint levels to consider
-            in optimization in W.
-            Defaults to np.linspace(POWER_SETPOINT_DEFAULT, POWER_SETPOINT_DISABLED, 5).
+
 
     """
 
